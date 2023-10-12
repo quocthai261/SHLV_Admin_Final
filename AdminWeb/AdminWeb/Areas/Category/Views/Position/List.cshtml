@@ -1,0 +1,140 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách vị trí</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    <button class="btn btn-purple-invert btn-filter" type="submit" onclick="onAddNewPositionClicked()">Thêm mới <i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mã vị trí").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(10).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Tên vị trí").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(100).ShowClearButton(true))
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridPositionList")
+                        .DataSource(d => d.WebApi()
+                        .Area("Category")
+                        .Controller("Position")
+                        .LoadAction("GetPositionList")
+                        .Key("PositionId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridPosition")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditPositionClicked()"></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDetelePositionClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(PositionResponseModel.PositionId)).Visible(false);
+                            columns.Add().DataField(nameof(PositionResponseModel.PositionCode)).Caption("Mã vị trí").Alignment(HorizontalAlignment.Center);
+                            columns.Add().DataField(nameof(PositionResponseModel.PositionName)).Caption("Tên vị trí");
+                            columns.Add().DataField(nameof(PositionResponseModel.IsRegister)).Caption("Đăng ký").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(PositionResponseModel.IsApproval)).Caption("Phê duyệt").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(PositionResponseModel.NextPosition)).Caption("Mã vị trí kế tiếp").Alignment(HorizontalAlignment.Center);
+                            columns.Add().DataField(nameof(PositionResponseModel.IsActive)).Caption("Sử dụng").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(PositionResponseModel.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(PositionResponseModel.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    function onAddNewPositionClicked() {
+
+        var modal = document.getElementById("popupPosition");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onEditPositionClicked() {
+
+        var modal = document.getElementById("popupPosition");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onDetelePositionClicked() {
+        var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Xóa dữ liệu thành công", "success");
+            }
+        });
+    }
+
+    function exportingGridPosition(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Position');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'PositionList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+
+
+

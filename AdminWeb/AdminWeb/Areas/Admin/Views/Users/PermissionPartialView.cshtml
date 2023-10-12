@@ -1,0 +1,111 @@
+﻿@model UserDetailViewModel
+
+<div class="row">
+    <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+        <div class="card card-body form-control-ui">
+            <div>
+                <div class="row">
+                    @{
+                        @(Html.DevExtreme().TreeList()
+                        .ID("permission")
+                        .DataSource(d => d.WebApi()
+                        .RouteName("Admin")
+                        .Controller("Permissions")
+                        .LoadAction("GetPermissionsListApi")
+                        .Key("PermissionId"))
+                        .KeyExpr("PermissionId")
+                        .ParentIdExpr("ParentId")
+                        .ShowBorders(true)
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField(nameof(SysPermissionsResponseModel.PermissionId)).Caption("Id");
+                            columns.Add().DataField(nameof(SysPermissionsResponseModel.PermissionName)).Caption("Code").AllowEditing(false);
+                            columns.Add().DataField(nameof(SysPermissionsResponseModel.Description)).Caption("Tên permission").AllowEditing(false);
+                        })
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .ShowRowLines(true)
+                        .ColumnAutoWidth(true)
+                        //.ExpandedRowKeys(new[] { 1 })
+                        .Selection(s => s.Mode(SelectionMode.Multiple))
+                        .SelectedRowKeys(@Model.PermissionIds)
+                        .OnSelectionChanged("SelectionChanged")
+                            )
+                    }                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    //==============================================================================
+    //Section Tree
+    var keys = [];
+    var user_click = "userclick";
+
+    function RecursiveGetNodeChild(obj) {
+        keys.push(obj.key);
+        if (obj.hasChildren) {
+            var _arrChild = obj.children;
+            for (var j = 0; j < _arrChild.length; j++) {
+                RecursiveGetNodeChild(_arrChild[j]);
+            }
+        }
+    }
+
+    function RecursiveGetNodeParent(obj) {
+        keys.push(obj.key);
+        var _nodeParent = obj.parent;
+        if (_nodeParent == null || _nodeParent == undefined || _nodeParent.level == -1) {
+            return;
+        }
+        RecursiveGetNodeParent(_nodeParent);
+    }
+
+    function SelectionChanged(e) {
+        var item = $("#permission").dxTreeList("instance");
+        console.log("SelectionChanged = ", e.component.getSelectedRowKeys(), item);
+        keys = [];
+        var currentSelectedRowKey = e.currentSelectedRowKeys;
+        var currentDeselectedRowKey = e.currentDeselectedRowKeys;
+        var treeList = $("#permission").dxTreeList("instance");
+        if (user_click == "userclick") {
+            if (currentSelectedRowKey.length > 0) {
+                for (var i = 0; i < currentSelectedRowKey.length; i++) {
+                    var node = treeList.getNodeByKey(currentSelectedRowKey[i]);
+                    RecursiveGetNodeParent(node);
+                    RecursiveGetNodeChild(node);
+                }
+                if (keys.length > 0) {
+                    var uniqueNames = [];
+                    $.each(keys, function (i, el) {
+                        if ($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+                    });
+                    user_click = "autoclick";
+                    treeList.selectRows(uniqueNames, true);
+                }
+            }
+        }
+
+        user_click = "userclick";
+
+        if (currentDeselectedRowKey.length > 0) {
+            for (var i = 0; i < currentDeselectedRowKey.length; i++) {
+                var node = treeList.getNodeByKey(currentDeselectedRowKey[i]);
+                RecursiveGetNodeChild(node);
+            }
+            if (keys.length > 0) {
+                var uniqueNames = [];
+                $.each(keys, function (i, el) {
+                    if ($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+                });
+                treeList.deselectRows(uniqueNames, true);
+            }
+        }
+    }
+
+        //==============================================================================
+</script>
+
+

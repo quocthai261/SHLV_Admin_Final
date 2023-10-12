@@ -1,0 +1,160 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+<div class="modal fade" id="popupSyncJobs" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Thêm công việc và đồng bộ</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Mô tả").Value("Mô tả").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(100))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="form-group">
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("SCHEDULE_TYPE_ID")
+                                .Name("SCHEDULE_TYPE_ID")
+                                .Placeholder("--Chọn--")
+                                .ShowClearButton(true)
+                                .DataSource(d => d.Mvc().Area("Admin").Controller("SyncScheduleType").LoadAction("GetSyncScheduleTypeList").Key("ScheduleTypeId"))
+                                .ValueExpr("Description")
+                                .DisplayExpr("Description")
+                                .OnValueChanged("Schedule_type_value_changed")
+                                )
+                            @* <span id="vadSCHEDULE_TYPE_ID" asp-validation-for="SCHEDULE_TYPE_ID" style="color:red;"></span> *@
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-2" id="div_schedule_weekly" style="display:none;text-align:left;">
+                        @(Html.DevExtreme().List()
+                            .ID("schedule_list_dev")
+                            .DataSource(d => d.Mvc().Area("Admin").Controller("SyncSchedule").LoadAction("GetSchedule").Key("ID"))
+                            .AllowItemDeleting(false)
+                            .ShowSelectionControls(true)
+                            .SelectionMode(ListSelectionMode.Multiple)
+                            .ItemTemplate(@<text><%= Text %></text>)
+                            )
+                    </div>
+
+
+
+                    <div class="col-md-12" id="div_schedule_interval" style="display:none;text-align:left;">
+                        <label for="inputName" class="col-md-2 pull-left control-label" style="text-align: left;color: #725dcf">Chu kỳ</label>
+                        <div class="col-md-10 inputTextboxControl">
+                            @(Html.DevExtreme().NumberBox().ID("Interval").Name("Interval").Min(0).Max(1000000).ShowSpinButtons(true).Width(100))
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12" id="div_time" style="display:none;text-align:left;">
+                        <div class="col-md-3 col-xs-12 pull-left ">
+                            <label for="inputName" class="control-label" style="text-align: left;color: #725dcf">Thời điểm<span style="color:red">&nbsp;(*)</span> </label>
+                        </div>
+                        <div class="col-md-9 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-12" style="margin-bottom: 10px">
+                                    <label for="inputName" class="col-md-6 col-xs-6 control-label" style="text-align: right;color: #725dcf">Giờ</label>
+                                    <div class="col-md-6 col-xs-6" style="padding: 0">
+                                        @(Html.DevExtreme().NumberBox().ID("Hour").Min(0).Max(23).ShowSpinButtons(true).Width(70))
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-xs-12" style="margin-bottom: 10px">
+                                    <label for="inputName" class="col-md-6 col-xs-6 control-label" style="text-align: right;color: #725dcf">Phút</label>
+                                    <div class="col-md-6 col-xs-6" style="padding: 0">
+                                        @(Html.DevExtreme().NumberBox().ID("Minute").Min(0).Max(59).ShowSpinButtons(true).Width(70))
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-xs-12" style="margin-bottom: 10px">
+                                    <label for="inputName" class="col-md-6 col-xs-6 control-label" style="text-align: right;color: #725dcf">Giây</label>
+                                    <div class="col-md-6 col-xs-6" style="padding: 0">
+                                        @(Html.DevExtreme().NumberBox().ID("Second").Min(0).Max(59).ShowSpinButtons(true).Width(70))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span id="vadHour" class="col-md-2" style="color:red;"></span>
+                        <span id="vadMinute" class="col-md-2 pull-left control-label" style="color:red;"></span>
+                        <span id="vadSecond" class="col-md-2 pull-left control-label" style="color:red;"></span>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveSyncJobs" onclick="onButtonSaveSyncJobsClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnCloseSyncJobs" onclick="onButtonCloseSyncJobsClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveSyncJobsClicked() {
+        var modal = document.getElementById("popupSyncJobs");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseSyncJobsClicked() {
+        var modal = document.getElementById("popupSyncJobs");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+    function Schedule_type_value_changed(data) {
+        var obj1 = document.getElementById("div_schedule_interval");
+        var obj3 = document.getElementById("div_schedule_weekly");
+        var obj4 = document.getElementById("div_time");
+        obj1.style.display = "none";
+        obj3.style.display = "none";
+        obj4.style.display = "none";
+        var text = data.value.toLowerCase();
+        switch (text) {
+            case "second":
+                if (obj1 !== null) {
+                    obj1.style.display = "block";
+                }
+                break;
+            case "minute":
+                if (obj1 !== null) {
+                    obj1.style.display = "block";
+                }
+                break;
+            case "hour":
+                if (obj1 !== null) {
+                    obj1.style.display = "block";
+                }
+                break;
+            case "weekly":
+                if (obj3 !== null) {
+                    obj3.style.display = "block";
+                }
+                if (obj4 !== null) {
+                    obj4.style.display = "block";
+                }
+                break;
+            case "daily":
+                if (obj4 !== null) {
+                    obj4.style.display = "block";
+                }
+                break;
+            default:
+        }
+    }
+
+</script>

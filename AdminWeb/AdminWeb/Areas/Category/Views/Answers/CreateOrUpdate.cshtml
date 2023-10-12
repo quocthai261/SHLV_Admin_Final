@@ -1,0 +1,55 @@
+﻿<div class="modal fade" id="popupAnswers" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Thêm câu trả lời tiêu chí đánh giá</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().NumberBox().ElementAttr("class", "required-validation")
+                                .Label("Loại tiêu chí đánh giá").Value(3).LabelMode(EditorLabelMode.Floating))
+                        </div>
+                    </div>                    
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Mã câu trả lời").Value("5").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(25))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextArea().ElementAttr("class", "required-validation").MinHeight(300)
+                                .Label("Nội dung câu trả lời").Value("Tôi cam kết đã thực hiện đầy đủ và trung thực quá trình phỏng vấn ứng viên theo đúng trách nhiệm và nghĩa vụ được giao.").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(500))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveAnswers" onclick="onButtonSaveAnswersClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnCloseAnswers" onclick="onButtonCloseAnswersClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveAnswersClicked() {
+        var modal = document.getElementById("popupAnswers");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseAnswersClicked() {
+        var modal = document.getElementById("popupAnswers");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

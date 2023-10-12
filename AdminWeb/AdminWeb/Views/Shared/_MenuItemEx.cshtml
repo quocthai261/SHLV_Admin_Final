@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer ViewLocalizer
+
+@* <li>
+    <a @(false ? Html.Raw("class=\"active\"") : Html.Raw("class=\"collapsed\"")) data-toggle="collapse" data-target="#ServiceNavbar0">
+        <i class="glyphicon glyphicon-user main-color"></i>&nbsp;
+        @ViewLocalizer["TaiKhoan"]
+        <i class="fa fa-caret-up main-color"></i>
+    </a>
+    <div @(false ? Html.Raw("class=\"collapse in\"") : Html.Raw("class=\"collapse\"")) id="ServiceNavbar0">
+        <ul>
+            @if (true)
+            {
+                <li>
+                    <a asp-area="" asp-action="ChangePassword" asp-controller="ChangePassword" class='@(false ? "active" : "")'>
+                        <i class="glyphicon glyphicon-credit-card main-color"></i>&nbsp;@ViewLocalizer["ThayDoiMatKhau"]
+                    </a>
+                </li>
+            }
+            <li>
+                <form asp-controller="Account" asp-action="LogOut" method="post" id="navLogoutForm"></form>
+                <a href="javascript:document.getElementById('navLogoutForm').submit()">
+                    <i class="glyphicon glyphicon-log-out main-color"></i>&nbsp; @ViewLocalizer["DangXuat"]
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
+ *@

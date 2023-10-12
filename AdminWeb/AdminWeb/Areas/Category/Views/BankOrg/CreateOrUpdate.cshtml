@@ -1,0 +1,77 @@
+﻿<div class="modal fade" id="popupBankOrg" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Thêm chi nhánh ngân hàng</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("BankId")
+                                .DataSource(d => d.WebApi().Area("Category").Controller("Bank").LoadAction("GetBankList"))
+                                .DisplayExpr("BankName")
+                                .ValueExpr("BankCode")
+                                .Placeholder("Chọn")
+                                .ElementAttr("class", "required-validation")
+                                .SearchEnabled(true).Label("Ngân hàng").LabelMode(EditorLabelMode.Floating)
+                                .ShowClearButton(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên chi nhánh").Value("Bank Org Name").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Mã chi nhánh").Value("Bank Org Code").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên Abbr").Value("Abbr name").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().CheckBox().Value(true).IconSize(18).ElementAttr("aria-label", "Custom size")
+                                .Text("Sử dụng")
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveBankOrg" onclick="onButtonSaveBankOrgClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnCloseBankOrg" onclick="onButtonCloseBankOrgClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveBankOrgClicked() {
+        var modal = document.getElementById("popupBankOrg");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseBankOrgClicked() {
+        var modal = document.getElementById("popupBankOrg");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

@@ -1,0 +1,9 @@
+﻿@using AdminWeb.Areas.Admin.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<HomeController> HtmlLocalizer
+
+<div class="text-center">
+    <h1 class="display-4" style="color: #725dcf;">@HtmlLocalizer["shinhanLifeVietNam"]</h1>
+    <p>@HtmlLocalizer["welcomeInHomePage"]</p>
+</div>

@@ -1,0 +1,47 @@
+﻿
+<div class="row">
+    <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+        <div class="card card-body form-control-ui">
+            <div>
+                <div class="row">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridAccountForRolesContainer")
+                        .DataSource(d => d.WebApi()
+                        .RouteName("Admin")
+                        .Controller("Users")
+                        .LoadAction("GetUsersListApi")
+                        .Key("UserId")
+                        )
+                        .ShowBorders(true)
+                            .Columns(columns =>
+                            {
+                                columns.Add().DataField(nameof(SysUsersModel.UserName)).Caption("Tài khoản");
+                                columns.Add().DataField(nameof(SysUsersModel.Name)).Caption("Họ").Width(300);
+                                columns.Add().DataField(nameof(SysUsersModel.SurName)).Caption("Tên").Width(200);
+                                columns.Add().DataField(nameof(SysUsersModel.Email)).Caption("Email").Width(200);
+                                columns.Add().DataField(nameof(SysUsersModel.PhoneNumber)).Caption("Số điện thoại").Width(100);
+                            })
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(5))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        .Selection(s => s.Mode(SelectionMode.Multiple))
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

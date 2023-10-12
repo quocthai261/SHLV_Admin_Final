@@ -1,0 +1,239 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<SalePlanConfigController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+@using (Html.DevExtreme().NamedTemplate("DeleteButton_cellTemplate"))
+{
+    <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleSalePlanConfigClicked()"></span>
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách kế hoạch kinh doanh</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox().ElementAttr("class", "required-validation")
+                                    .DataSource(d => d.WebApi().Area("Category").Controller("SalePlanTypes").LoadAction("GetSalePlanTypesList"))
+                                    .DisplayExpr("Title")
+                                    .ValueExpr("SalePlanTypesId")
+                                    .Placeholder("Chọn loại kế hoạch")
+                                    .SearchEnabled(true).Label("Loại kế hoạch").LabelMode(EditorLabelMode.Floating)
+                                    .ShowClearButton(true)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox().ElementAttr("class", "required-validation")
+                                    .DataSource(d => d.WebApi().Area("Category").Controller("Position").LoadAction("GetPositionList"))
+                                    .DisplayExpr("PositionName")
+                                    .ValueExpr("PositionId")
+                                    .Placeholder("Chọn vị trí")
+                                    .SearchEnabled(true).Label("Vị trí thiết lập").LabelMode(EditorLabelMode.Floating)
+                                    .ShowClearButton(true)
+                                    )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridSalePlanConfig")
+                        .DataSource(d => d.WebApi()
+                        .Area("Category")
+                        .Controller("SalePlanConfig")
+                        .LoadAction("GetSalePlanConfigList")
+                        .Key("SalePlanConfigId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Editing(editing =>
+                        {
+                            editing.Mode(GridEditMode.Batch);
+                            editing.AllowUpdating(true);
+                            editing.AllowAdding(true);
+                        })
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridSalePlanConfig")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                @*                    <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditSalePlanConfigClicked()"></span> *@
+                                <span class="glyphicon glyphicon-trash icon-grid" @* onclick="onDateleSalePlanConfigClicked()" *@></span>
+                            </text>);
+                            columns.Add().DataField(nameof(SalePlanConfigResponseModel.SalePlanConfigId)).Visible(false);
+                            columns.Add().DataField(nameof(SalePlanConfigResponseModel.PlanType)).Caption("Loại kế hoạch").Lookup(lookup => lookup
+                            .DataSource(d => d.WebApi()
+                            .Controller("SalePlanTypes")
+                            .LoadAction("GetSalePlanTypesList")
+                            .Key("SalePlanTypesId"))
+                            .DisplayExpr("Title")
+                            .ValueExpr("SalePlanTypesId")
+                            );
+                            columns.Add().DataField(nameof(SalePlanConfigResponseModel.PositionCode)).Caption("Vị trí thiết lập").Lookup(lookup => lookup
+                            .DataSource(d => d.WebApi()
+                            .Controller("Position")
+                            .LoadAction("GetPositionList")
+                            .Key("PositionId"))
+                            .DisplayExpr("PositionName")
+                            .ValueExpr("PositionCode")
+                            );
+                            columns.Add().DataField(nameof(SalePlanConfigResponseModel.AllowCreateDay)).Caption("Ngày cuối được tạo KH").Width(200).Alignment(HorizontalAlignment.Center);
+                            columns.Add().DataField(nameof(SalePlanConfigResponseModel.AllowEditDay)).Caption("Ngày cuối được chỉnh sửa KH").Width(200).Alignment(HorizontalAlignment.Center);                           
+                        })
+                        .ColumnHidingEnabled(false)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        .MasterDetail(md =>
+                        {
+                            md.Enabled(true);
+                            md.Template(@<Text>
+                                <div class="container-fluid p-0">
+                                    <h1 class="h4 mb-3 form-title"><strong>Chỉ tiêu kế hoạch kinh doanh theo vị trí</strong></h1>
+                                    <div class="row">
+                                        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+                                            <div class="card flex-fill w-100 form-control-ui">
+                                                <div class="card-body py-3">
+                                                    @(
+                                                                Html.DevExtreme().DataGrid()
+                                                                .DataSource(d => d.WebApi()
+                                                                .Area("Category")
+                                                                .Controller("SalePlanConfig")
+                                                                .LoadAction("GetSalePlanConfigDetailList")
+                                                                .LoadParams(new { id = new JS("data.SalePlanConfigId") })
+                                                                )
+                                                                .ShowBorders(true)
+                                                                .Selection(s => s.Mode(SelectionMode.Single))
+                                                                .Editing(editing =>
+                                                                {
+                                                                            editing.Mode(GridEditMode.Batch);
+                                                                            editing.AllowUpdating(true);
+                                                                            editing.AllowAdding(true);
+                                                                        })
+                                                                .Columns(columns =>
+                                                                {
+                                                                            columns.Add().Caption("").Width(70).CellTemplate(new TemplateName("DeleteButton_cellTemplate")).Alignment(HorizontalAlignment.Center);
+                                                                            columns.Add().DataField(nameof(SalePlanConfigDetailResponseModel.SalePlanConfigDetailId)).Visible(false);
+                                                                            columns.Add().DataField(nameof(SalePlanConfigDetailResponseModel.ChiTieuKHKD)).Caption("Chỉ tiêu kế hoạch kinh doanh").Lookup(lookup => lookup
+                                                                            .DataSource(d => d.WebApi()
+                                                                            .Controller("SalePlanTypes")
+                                                                            .LoadAction("GetChiTieuKHKDList")
+                                                                            .Key("Id"))
+                                                                            .DisplayExpr(new JS("customeDisplayDetail"))
+                                                                            .ValueExpr("Code"));
+                                                                        })
+                                                                .ColumnHidingEnabled(true)
+                                                                .AllowColumnResizing(true)
+                                                                .ColumnAutoWidth(true)
+                                                                .ColumnMinWidth(50)
+                                                                .ShowRowLines(true)
+                                                                .FilterRow(f => f.Visible(false))
+                                                                .HeaderFilter(f => f.Visible(false))
+                                                                .GroupPanel(p => p.Visible(false))
+                                                                .Grouping(g => g.AutoExpandAll(false))
+                                                                .RemoteOperations(false)
+                                                                .Paging(paging => paging.PageSize(10))
+                                                                )
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Text>);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    // function onAddNewSalePlanConfigClicked() {
+
+    //     var modal = document.getElementById("popupSalePlanConfig");
+    //     modal.classList.add("show", "in");
+    //     modal.style.display = "block";
+    // }
+
+    // function onEditSalePlanConfigClicked() {
+
+    //     var modal = document.getElementById("popupSalePlanConfig");
+    //     modal.classList.add("show", "in");
+    //     modal.style.display = "block";
+    // }
+
+    // function onDateleSalePlanConfigClicked() {
+    //     var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+    //     myDialog.show().done(function (dialogResult) {
+    //         if (dialogResult.buttonText === "Có") {
+    //             notify("Xóa dữ liệu thành công", "success");
+    //         }
+    //     });
+    // }
+
+    function exportingGridSalePlanConfig(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('SalePlanConfig');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'SalePlanConfigList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+
+
+    function customeDisplayDetail(item) {
+        if (item !== null && item !== undefined)
+            return item.Code + " - " + item.Name;
+        return null;
+    }
+</script>
+

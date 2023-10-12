@@ -1,0 +1,136 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<DiagnosisCategoryController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Quản lý loại chuẩn đoán</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    <button class="btn btn-purple-invert btn-filter" type="submit" onclick="onAddNewDiagnosisCategoryClicked()">Thêm mới <i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mô tả loại chuẩn đoán").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="row button-search-row">
+                            <div class="col-md-12">
+                                <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                                <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridDiagnosisCategoryList")
+                        .DataSource(d => d.WebApi()
+                        .Area("Category")
+                        .Controller("DiagnosisCategory")
+                        .LoadAction("GetDiagnosisCategoryList")
+                        .Key("DiagnosisCategoryId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridDiagnosisCategory")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditDiagnosisCategoryClicked()"></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleDiagnosisCategoryClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(DiagnosisCategoryResponseModel.DiagnosisCategoryId)).Caption("ID loại chuẩn đoán").Width(150);
+                            columns.Add().DataField(nameof(DiagnosisCategoryResponseModel.CategoryDescription)).Caption("Mô tả loại chuẩn đoán");
+                            columns.Add().DataField(nameof(DiagnosisCategoryResponseModel.IsActive)).Caption("Sử dụng").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(DiagnosisCategoryResponseModel.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(DiagnosisCategoryResponseModel.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    function onAddNewDiagnosisCategoryClicked() {
+
+        var modal = document.getElementById("popupDiagnosisCategory");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onEditDiagnosisCategoryClicked() {
+
+        var modal = document.getElementById("popupDiagnosisCategory");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onDateleDiagnosisCategoryClicked() {
+        var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Xóa dữ liệu thành công", "success");
+            }
+        });
+    }
+
+    function exportingGridDiagnosisCategory(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('DiagnosisCategory');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DiagnosisCategoryList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+
+

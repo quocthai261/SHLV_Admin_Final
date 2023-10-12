@@ -1,0 +1,55 @@
+﻿@model UserDetailViewModel
+
+<div class="row">
+    <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+        <div class="card card-body form-control-ui">
+            <div>
+                <div class="row">
+                    @(Html.DevExtreme().DataGrid()
+                        //.InputAttr(new { name = "RoleIDs" })
+                        .ID("gridRolesContainer")
+                        .DataSource(d => d.WebApi()
+                        .RouteName("Admin")
+                        .Controller("Roles")
+                        .LoadAction("GetRolesListApi")
+                        .Key("RoleId")
+                        )
+                        .ShowBorders(true)
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField(nameof(SysRoleModel.RoleId)).Caption("ID").Alignment(HorizontalAlignment.Center).Width(50);
+                            columns.Add().DataField(nameof(SysRoleModel.Code)).Caption("Role code").Alignment(HorizontalAlignment.Center).AllowEditing(false).MinWidth(100);
+                            columns.Add().DataField(nameof(SysRoleModel.Name)).Caption("Role name").Alignment(HorizontalAlignment.Center).AllowEditing(false);
+                        })
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(5))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        .Selection(s => s.Mode(SelectionMode.Multiple))
+                        .SelectedRowKeys(@Model?.RoleIDs)
+                        .OnSelectionChanged("SelectionRoleChanged")
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    function SelectionRoleChanged(e) {
+        console.log("SelectionRoleChanged = ", e.component.getSelectedRowKeys());
+    }
+</script>
+

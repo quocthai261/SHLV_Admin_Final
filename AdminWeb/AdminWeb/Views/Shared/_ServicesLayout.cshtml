@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>FPT - Admin</title>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="shortcut icon" href="~/add_static//img/icons/icon-48x48.png" />
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+	<link href="~/add_static//css//app.css" rel="stylesheet">
+
+	<!-- CSS -->
+	<link href="~/css/add_main/normalize.css" rel="stylesheet" />
+	<link href="~/css/add_main/animate.css" rel="stylesheet" />
+	<link href="~/css/add_main/stellarnav.min.css" rel="stylesheet" />
+	<link href="~/css/add_main/owl.carousel.css" rel="stylesheet" />
+	<link href="~/css/add_main/owl.theme.default.min.css" rel="stylesheet" />
+	<link href="~/css/add_main/bootstrap.min.css" rel="stylesheet" />
+	<link href="~/css/add_main/font-awesome.min.css" rel="stylesheet" />
+	<link href="~/css/add_main/style.css" asp-append-version="true" rel="stylesheet" />
+	<link href="~/css/add_main/responsive.css" asp-append-version="true" rel="stylesheet" />
+	<link href="~/css/add_main/common.css" asp-append-version="true" rel="stylesheet" />
+	@* 	<link href="~/css/add_main/form-wizard.css" rel="stylesheet" />
+	*@	@* <link href="~/css/devextreme/bootstrap.css" rel="stylesheet" /> *@
+	<link href="~/css/devextreme/dx.common.css" rel="stylesheet" />
+	<link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+	<link href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+	<link href="~/css/site.css" rel="stylesheet" />
+
+	<!-- JS -->
+	<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" async defer></script>
+	<script src="~/js/add_main/modernizr.min.js"></script>
+	<script src="~/js/add_main/jquery.min.js"></script>
+	<script src="~/js/add_main/bootstrap.min.js"></script>
+	<script src="~/js/devextreme/dx.all.js"></script>
+	<script src="~/js/devextreme/exceljs.min.js"></script>
+	<script src="~/js/devextreme/FileSaver.min.js"></script>
+
+	<script src="~/js/devextreme/aspnet/dx.aspnet.mvc.js"></script>
+	<script src="~/js/devextreme/aspnet/dx.aspnet.data.js"></script>
+	<script src="~/js/site.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<nav class="navbar navbar-expand navbar-light navbar-bg">
+			<a class="sidebar-toggle js-sidebar-toggle">
+				<i class="hamburger align-self-center"></i>
+			</a>
+
+			<div class="navbar-collapse collapse" style="position: relative;">
+				<ul class="navbar-nav navbar-align" style="position: absolute;top:-27px;right:0;">
+					<li class="nav-item">
+						<div class="input-group input-group-language">
+							<span class="input-group-text">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
+									<path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286H4.545zm1.634-.736L5.5 3.956h-.049l-.679 2.022H6.18z"></path>
+									<path d="M0 2a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2zm7.138 9.995c.193.301.402.583.63.846-.748.575-1.673 1.001-2.768 1.292.178.217.451.635.555.867 1.125-.359 2.08-.844 2.886-1.494.777.665 1.739 1.165 2.93 1.472.133-.254.414-.673.629-.89-1.125-.253-2.057-.694-2.82-1.284.681-.747 1.222-1.651 1.621-2.757H14V8h-3v1.047h.765c-.318.844-.74 1.546-1.272 2.13a6.066 6.066 0 0 1-.415-.492 1.988 1.988 0 0 1-.94.31z"></path>
+								</svg>
+							</span>
+							<partial name="_CulturePartialServiceLayout" />
+						</div>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+							<div class="position-relative">
+								<i class="align-middle" data-feather="bell"></i>
+								<span class="indicator">4</span>
+							</div>
+						</a>
+						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="alertsDropdown">
+							<div class="dropdown-menu-header">
+								4 Thông báo mới
+							</div>
+							<div class="list-group">
+								<a href="#" class="list-group-item">
+									<div class="row g-0 align-items-center">
+										<div class="col-2">
+											<i class="text-danger" data-feather="alert-circle"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark">Nộp HSYCBH thành công</div>
+											<div class="text-muted small mt-1">Hồ sơ của khách hàng Lê Minh Ngọc đã nộp thành công.</div>
+											<div class="text-muted small mt-1">30 phút trước</div>
+										</div>
+									</div>
+								</a>
+								<a href="#" class="list-group-item">
+									<div class="row g-0 align-items-center">
+										<div class="col-2">
+											<i class="text-warning" data-feather="bell"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark">Sinh nhật</div>
+											<div class="text-muted small mt-1">Hôm nay là sinh nhật của khách hàng Trần Thái Thịnh</div>
+											<div class="text-muted small mt-1">2 giờ trước</div>
+										</div>
+									</div>
+								</a>
+								<a href="#" class="list-group-item">
+									<div class="row g-0 align-items-center">
+										<div class="col-2">
+											<i class="text-success" data-feather="user-plus"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark">Khóa học</div>
+											<div class="text-muted small mt-1">Bạn vừa được đồng ý cho tham dự khóa học Nâng cao kỹ năng Sales</div>
+											<div class="text-muted small mt-1">7 giờ trước</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="dropdown-menu-footer">
+								<a href="#" class="text-muted">Hiện tất cả thông báo</a>
+							</div>
+						</div>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+							<i class="align-middle" data-feather="settings"></i>
+						</a>
+
+						<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+							<img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="avatar img-fluid rounded me-1" alt="Vũ Trường Giang" /> <span class="text-dark">Vũ Trường Giang</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-end">
+							<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i> Last Login: 15:32 15/09/2023</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" onclick="onButtonAccountClicked()"><i class="align-middle me-1" data-feather="user"></i> Tài khoản</a>
+							<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="home"></i> Agency Portal</a>
+							<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Hỗ trợ</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" onclick="onButtonLogoutClicked()">Đăng xuất</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<nav id="sidebar" class="sidebar js-sidebar">
+			<div class="sidebar-content js-simplebar">
+				@*<a class="sidebar-brand" href="index.html">
+				<span class="align-middle title-sidebar">Point of Sales</span>
+				</a> *@
+				@await Component.InvokeAsync("vcNavbar")
+			</div>
+		</nav>
+
+		<div class="main" style="padding-top: 55px;">
+			<main class="content">
+				<partial name="_Notification" />
+				@RenderBody()
+			</main>
+
+			<footer class="footer">
+				<div class="container-fluid">
+					<div class="row text-muted">
+						<div class="col-6 text-start">
+							<p class="mb-0">
+								<a class="text-muted" href="https://shinhanlifevn.com.vn/" target="_blank"><strong>Copyright © 2023  Shinhan Life Vietnam.All rights reserved. Ver - 1.0</strong></a>
+							</p>
+						</div>
+						<div class="col-6 text-end">
+							<ul class="list-inline">
+								<li class="list-inline-item">
+									<a class="text-muted" href="https://shinhanlifevn.com.vn/" target="_blank">About Shinhan Life</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<script src="~/add_static//js//app.js"></script>
+	<script>
+		function onButtonAccountClicked() {
+			location.href = '@Url.Action("Index", "Account", new { area = "Admin" })';
+		}
+
+		function onButtonLogoutClicked() {
+			location.href = '@Url.Action("Index", "Home", new { area = "" })';
+		}
+	</script>
+</body>
+
+</html>

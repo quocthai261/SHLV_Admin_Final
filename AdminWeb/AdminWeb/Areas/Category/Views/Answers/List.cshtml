@@ -1,0 +1,142 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Quản lý câu trả lời tiêu chí đánh giá</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    <button class="btn btn-purple-invert btn-filter" type="submit" onclick="onAddNewAnswersClicked()">Thêm mới <i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox()
+                                    .ID("CriteriaType")
+                                    .DataSource(d => d.WebApi().Area("Category").Controller("Criterias").LoadAction("GetCriteriaList"))
+                                    .DisplayExpr("CriteriaContent")
+                                    .ValueExpr("CriteriaId")
+                                    .Placeholder("Chọn loại tiêu chí đánh giá")
+                                    .ShowClearButton(true)
+                                    .Label("Thanh toán").LabelMode(EditorLabelMode.Static)
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mã câu trả lời").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridAnswersList")
+                        .DataSource(d => d.WebApi()
+                        .Area("Category")
+                        .Controller("Answers")
+                        .LoadAction("GetAnswersList")
+                        .Key("AnswerId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridAnswers")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditAnswersClicked()"></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleAnswersClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(AnswersResponseModel.AnswerId)).Caption("ID").Visible(false);
+                            columns.Add().DataField(nameof(AnswersResponseModel.CriteriaId)).Caption("Loại tiêu chí đánh giá").DataType(GridColumnDataType.Number).Alignment(HorizontalAlignment.Center);
+                            columns.Add().DataField(nameof(AnswersResponseModel.AnswerContent)).Caption("Nội dung câu trả lời");
+                            columns.Add().DataField(nameof(AnswersResponseModel.AnswerCode)).Caption("Mã câu trả lời");
+                            columns.Add().DataField(nameof(CriteriasResponseModel.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(CriteriasResponseModel.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(true)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    function onAddNewAnswersClicked() {
+
+        var modal = document.getElementById("popupAnswers");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onEditAnswersClicked() {
+
+        var modal = document.getElementById("popupAnswers");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onDateleAnswersClicked() {
+        var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Xóa dữ liệu thành công", "success");
+            }
+        });
+    }
+
+    function exportingGridAnswers(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('Answers');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'AnswersList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+
+

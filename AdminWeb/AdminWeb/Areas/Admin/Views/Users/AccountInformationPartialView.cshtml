@@ -1,0 +1,83 @@
+﻿@model UserDetailViewModel
+
+<div class="row">
+    <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+        <div class="card card-body form-control-ui">
+            <div>
+                <div class="row">
+                    @(
+                        Html.DevExtreme().TextBox()
+                        .ID("UserId")
+                        .InputAttr(new { name = "User.UserId" })
+                        .ElementAttr("class", "required-validation")
+                        .Label("Id").LabelMode(EditorLabelMode.Floating)
+                        .MaxLength(50).ShowClearButton(true)
+                        .Value(Model.User.UserId + "")
+                        .ReadOnly(true)
+                        .Visible(false)
+                                )
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .ID("UserName")
+                                .InputAttr(new { name = "User.UserName" })
+                                .ElementAttr("class", "required-validation")
+                                .Label("Tài khoản").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50).ShowClearButton(true)
+                                .Value(Model.User.UserName)
+                                .ReadOnly(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .ID("Name")
+                                .ElementAttr("class", "required-validation")
+                                .Label("Họ người dùng").LabelMode(EditorLabelMode.Floating)
+                                .Value(Model.User.Name)
+                                .MaxLength(50).ShowClearButton(true)
+                                .ReadOnly(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .ID("SurName")
+                                .ElementAttr("class", "required-validation")
+                                .Label("Tên người dùng").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50).ShowClearButton(true)
+                                .Value(Model.User.SurName)
+                                .ReadOnly(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .ID("PhoneNumber")
+                                .Label("Số điện thoại").LabelMode(EditorLabelMode.Floating)
+                                .Value(Model.User.PhoneNumber)
+                                .MaxLength(50).ShowClearButton(true)
+                                .ReadOnly(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .ID("Email")
+                                .ElementAttr("class", "required-validation")
+                                .Label("Email").LabelMode(EditorLabelMode.Floating)
+                                .Value(Model.User.Email)
+                                .MaxLength(50).ShowClearButton(true)
+                                .ReadOnly(true)
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

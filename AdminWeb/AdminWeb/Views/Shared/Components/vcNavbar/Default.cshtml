@@ -1,0 +1,20 @@
+﻿@{
+    var siteMap = ViewBag.SiteMap as IEnumerable<TreeMenuItem<SiteMapNode>>;
+}
+
+<div class="mobileService">
+    <div class="service-menu" style="padding-top: 60px;">
+        @{
+            if (siteMap != null)
+            {
+                <ul style="height: 900px;overflow:auto">
+                    @foreach (var item in siteMap)
+                    {
+                        @await Html.PartialAsync("_MenuItem", item)
+                    }
+                    @await Html.PartialAsync("_MenuItemEx")
+                </ul>
+            }
+        }
+    </div>
+</div>

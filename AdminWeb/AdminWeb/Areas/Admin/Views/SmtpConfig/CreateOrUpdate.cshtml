@@ -1,0 +1,134 @@
+﻿<div class="modal fade" id="popupSmtpConfig" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Thêm cấu hình SMTP</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Mã nhóm").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên người dùng mạng").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Địa chỉ gửi").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên người gửi").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Cổng máy SMTP").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Máy chủ SMTP").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Danh sách Mail To").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Danh sách Mail CC").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox()
+                                .Label("Danh sách Mail BCC").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().Mode(TextBoxMode.Password).ElementAttr("class", "required-validation")
+                                .Label("Mật khẩu").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            @(Html.DevExtreme().DateBox().ElementAttr("class", "required-validation")
+                                .Label("Ngày hiệu lực").LabelMode(EditorLabelMode.Floating).ShowClearButton(true))
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <label class="l-title label-m-s">Kích hoạt SSL <span style="color:red">(*)</span></label>
+                        <div class="form-group">
+                            @(Html.DevExtreme().Switch().SwitchedOffText("Không").SwitchedOnText("Có")
+                                .Width(80).Value(true))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <label class="l-title label-m-s">Sử dụng thông tin xác thực mặc định <span style="color:red">(*)</span></label>
+                        <div class="form-group">
+                            @(Html.DevExtreme().Switch().SwitchedOffText("Không").SwitchedOnText("Có")
+                                .Width(80).Value(true))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <label class="l-title label-m-s">Hoạt động <span style="color:red">(*)</span></label>
+                        <div class="form-group">
+                            @(Html.DevExtreme().Switch().SwitchedOffText("Không").SwitchedOnText("Có")
+                                .Width(80).Value(true))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveSmtpConfig" onclick="onButtonSaveSmtpConfigClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnCloseSmtpConfig" onclick="onButtonCloseSmtpConfigClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveSmtpConfigClicked() {
+        var modal = document.getElementById("popupSmtpConfig");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseSmtpConfigClicked() {
+        var modal = document.getElementById("popupSmtpConfig");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

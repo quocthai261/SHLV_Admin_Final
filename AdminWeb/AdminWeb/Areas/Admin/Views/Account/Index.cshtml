@@ -1,0 +1,112 @@
+﻿@using AdminWeb.Models
+@using AdminWeb.Areas.Admin.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Thông tin cá nhân</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="form-group" style="display: flex;">
+                                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 60px;" alt="Avatar" />
+                                <div style="padding: 0px 10px;">
+                                    <h4><strong>Vũ Trường Giang</strong></h4>
+                                    <p>Tư vấn viên tiềm năng</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Tên khách hàng").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true).Value("Vũ Trường Giang"))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Số điện thoại").Value("0978473677").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Email").Value("vutru*******@gmail.com").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Số CMND").Value("*******2313123").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox()
+                                //.DataSource(d => d.WebApi().Area("Functions").Controller("Product").LoadAction("GetPaymodeList"))
+                                    //.DisplayExpr("PayModeName")
+                                    //.ValueExpr("PayModeID")
+                                    .Placeholder("Chọn")
+                                    .SearchEnabled(true).Label("Giới tính").LabelMode(EditorLabelMode.Floating)
+                                    .ShowClearButton(true).ElementAttr("class", "required-validation")
+                                    .DisplayExpr("Name")
+                                    .ValueExpr("Code")
+                                    .Value("1")
+                                    .DataSource(new object[] {
+                                new { Code = "1", Name = "Nam"},
+                                new { Code = "2", Name = "Nữ"},
+                                    })
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().DateBox()
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .UseMaskBehavior(true)
+                                    .Placeholder("dd/mm/yyyy")
+                                    .Label("Ngàysinh").LabelMode(EditorLabelMode.Floating)
+                                    .ElementAttr("class", "required-validation").ShowClearButton(true)
+                                    .Value(DateTime.Now.AddYears(-20))
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .ElementAttr("class", "required-validation")
+                                    .Label("Địa chỉ").Value("Lô B3, đường Sáng Tạo, P. Tân Thuận Đông, Q.7, TP.HCM").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-right-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit" onclick="onPopupChangePasswordClicked()">Thay đổi mật khẩu</button>
+                            <button class="btn btn-purple-style" type="submit">Cập nhật thông tin</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("PopupChangePassword")
+
+<script>
+    function onPopupChangePasswordClicked() {
+        var modal = document.getElementById("popupChangePassword");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+</script>

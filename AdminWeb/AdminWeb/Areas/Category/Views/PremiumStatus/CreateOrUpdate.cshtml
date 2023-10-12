@@ -1,0 +1,56 @@
+﻿<div class="modal fade" id="popupCreateUpdate" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Tình trạng phí của sản phẩm chính</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên tiếng Anh").Value("Regular").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên tiếng Việt").Value("Định kỳ").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <div class="form-group">
+                            @(Html.DevExtreme().CheckBox().Value(true).IconSize(18).ElementAttr("aria-label", "Custom size")
+                                .Text("Sử dụng")
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSave" onclick="onButtonSaveClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnClose" onclick="onButtonCloseClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveClicked() {
+        var modal = document.getElementById("popupCreateUpdate");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseClicked() {
+        var modal = document.getElementById("popupCreateUpdate");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

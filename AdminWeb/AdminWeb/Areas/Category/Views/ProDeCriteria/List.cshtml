@@ -1,0 +1,156 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<ProDeCriteriaController> HtmlLocalizer
+
+@{
+    var confirmDeleteMessage = String.Format(@HtmlLocalizer["ConfirmDeleteMessage"].Value);
+    var confirmDeleteTitle = String.Format(@HtmlLocalizer["ConfirmDeleteTitle"].Value);
+}
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Danh sách tiêu chí thăng/giáng chức</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tìm kiếm</h5>
+                    <button class="btn btn-purple-invert btn-filter" type="submit" onclick="onAddNewProDeCriteriaClicked()">Thêm mới <i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+                <div class="card-body py-3">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().TextBox()
+                                    .Label("Mã tiêu chí").LabelMode(EditorLabelMode.Floating)
+                                    .MaxLength(50).ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                @(Html.DevExtreme().SelectBox()
+                                    .DataSource(d => d.WebApi().Area("Category").Controller("ProDeCriteria").LoadAction("GetUnitList"))
+                                    .Placeholder("Chọn đơn vị")
+                                    .ShowClearButton(true))
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <div class="form-group">
+                                    @(Html.DevExtreme().TextBox()
+                                        .Label("Tiêu đề tiêu chí").LabelMode(EditorLabelMode.Floating)
+                                        .MaxLength(100).ShowClearButton(true))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row button-search-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-trash"></i> Xóa điều kiện</button>
+                            <button class="btn btn-purple-style" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridProDeCriteriaType")
+                        .DataSource(d => d.WebApi()
+                        .Area("Category")
+                        .Controller("ProDeCriteria")
+                        .LoadAction("GetProDeCriteriaList")
+                        .Key("ProDeCriteriaId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridProDeCriteria")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(70).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditProDeCriteriaClicked()"></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleProDeCriteriaClicked()"></span>
+                            </text>);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.ProDeCriteriaId)).Visible(false);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.Code)).Caption("Mã tiêu chí").Width(150);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.Title)).Caption("Tiêu đề tiêu chí");
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.Unit)).Caption("Đơn vị").Width(100).Alignment(HorizontalAlignment.Center);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.Icon)).Caption("Biểu tượng").Width(200);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.ProcessColor)).Caption("Màu quá trình").Width(150);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.IsActive)).Caption("Sử dụng").DataType(GridColumnDataType.Boolean).Alignment(HorizontalAlignment.Center).Width(100);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(ProDeCriteriaResponseModel.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(false)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    function onAddNewProDeCriteriaClicked() {
+
+        var modal = document.getElementById("popupProDeCriteria");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onEditProDeCriteriaClicked() {
+
+        var modal = document.getElementById("popupProDeCriteria");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onDateleProDeCriteriaClicked() {
+        var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Xóa dữ liệu thành công", "success");
+            }
+        });
+    }
+
+    function exportingGridProDeCriteria(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('ProDeCriteria');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ProDeCriteriaList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+

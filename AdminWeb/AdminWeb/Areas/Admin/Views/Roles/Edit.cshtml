@@ -1,0 +1,67 @@
+﻿
+
+<div class="container-fluid p-0">
+    <h1 class="h5 mb-3 form-title">
+        Quản trị người dùng
+        <i class="fa fa-caret-right" aria-hidden="true"></i>
+        <strong>Cập nhật thông tin nhóm người dùng</strong>
+    </h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card card-body form-control-ui">
+                <div class="row button-right-row">
+                    <div class="col-md-12">
+                        <button class="btn btn-purple-style" type="button" onclick="onBackToRoleListClicked()"><span class="glyphicon glyphicon-triangle-left"></span> Trở về</button>
+                        <button class="btn btn-purple-style" type="button" onclick="saveClicked()">Lưu <span class="glyphicon glyphicon-ok"></span></button>
+                    </div>
+                </div>
+                <div class="collapse show" id="collapse01">
+                    <div class="custom-tab" style="padding: 10px">
+                        <div class="nav-tabs-custom" style="background-color: #fff;">
+                            <ul class="nav nav-tabs">
+                                <li class="active" id="tabInforUserGroup">
+                                    <a href="#tab1" data-toggle="tab">Thông tin nhóm người dùng</a>
+                                </li>
+                                <li id="tabAccount">
+                                    <a href="#tab2" data-toggle="tab">Tài khoản</a>
+                                </li>
+                                <li id="tabPermissionForRole">
+                                    <a href="#tab3" data-toggle="tab">Phân quyền</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <div style="padding: 10px">
+                                        @await Html.PartialAsync("InforUserGroupPartialView")
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <div style="padding: 10px">
+                                        @await Html.PartialAsync("AccountPartialView")
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <div style="padding: 10px">
+                                        @await Html.PartialAsync("PermissionForRolePartialView")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onBackToRoleListClicked() {
+        location.href = '@Url.Action("Index", "Roles", new { area = "Admin" })';
+    }
+    function saveClicked() {
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+</script>
+
+

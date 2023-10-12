@@ -1,0 +1,160 @@
+﻿@model UserDetailViewModel
+
+
+<div class="container-fluid p-0">
+    <h1 class="h5 mb-3 form-title">
+        Quản trị người dùng
+        <i class="fa fa-caret-right" aria-hidden="true"></i>
+        <strong>Cập nhật thông tin người dùng</strong>
+    </h1>
+    <div class="row">
+       @*  @using (Html.BeginForm("SubmitEdit", "Users", FormMethod.Post))
+        {
+            <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+                <div class="card card-body form-control-ui">
+                    <div class="row button-right-row">
+                        <div class="col-md-12">
+                            <button class="btn btn-purple-style" type="submit" onclick="onBackToUserListClicked()"><span class="glyphicon glyphicon-triangle-left"></span> Trở về</button>
+                            <button class="btn btn-purple-style" type="submit">Lưu <span class="glyphicon glyphicon-ok"></span></button>
+                        </div>
+                    </div>
+                    <div class="collapse show" id="collapse01">
+                        <div class="custom-tab" style="padding: 10px">
+                            <div class="nav-tabs-custom" style="background-color: #fff;">
+                                <ul class="nav nav-tabs">
+                                    <li class="active" id="tabAccountInfo">
+                                        <a href="#tab1" data-toggle="tab">Thông tin tài khoản</a>
+                                    </li>
+                                    <li id="tabGroupAccount">
+                                        <a href="#tab2" data-toggle="tab">Nhóm tài khoản</a>
+                                    </li>
+                                    <li id="tabPermission">
+                                        <a href="#tab3" data-toggle="tab">Phân quyền</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab1">
+                                        <input asp-for="User.UserName" class="form-control" required="" />
+                                        <div style="padding: 10px">
+                                            @await Html.PartialAsync("AccountInformationPartialView", Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab2">
+                                        <div style="padding: 10px">
+                                            @await Html.PartialAsync("RolePartialView", Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab3">
+                                        <div style="padding: 10px">
+                                            @await Html.PartialAsync("PermissionPartialView", Model)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } *@
+       @*  <form class="form-form" asp-controller="Users" asp-action="SubmitEdit" method="post" enctype="multipart/form-data" asp-antiforgery="true" role="form"> *@
+        <form id="edit-user-form" asp-controller="Users" asp-action="SubmitEdit" method="post">
+            <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+                <div class="card card-body form-control-ui">
+                    <div class="row button-right-row">
+                        <div class="col-md-12">
+                            <button id="back-to-user" class="btn btn-purple-style" type="button" onclick="onBackToUserListClicked()"><span class="glyphicon glyphicon-triangle-left"></span> Trở về</button>
+                            <button id="update-user" class="btn btn-purple-style" type="button" onclick="saveClicked()">Lưu <span class="glyphicon glyphicon-ok"></span></button>
+                        </div>
+                    </div>
+                    <div class="collapse show" id="collapse01">
+                        <div class="custom-tab" style="padding: 10px">
+                            <div class="nav-tabs-custom" style="background-color: #fff;">
+                                <ul class="nav nav-tabs">
+                                    <li class="active" id="tabAccountInfo">
+                                        <a href="#tab1" data-toggle="tab">Thông tin tài khoản</a>
+                                    </li>
+                                    <li id="tabGroupAccount">
+                                        <a href="#tab2" data-toggle="tab">Nhóm tài khoản</a>
+                                    </li>
+                                    <li id="tabPermission">
+                                        <a href="#tab3" data-toggle="tab">Phân quyền</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab1">
+                                        <div style="padding: 10px">
+                                            <div class="form-group">
+                                               @*  @(Html.DevExtreme().TextBox()
+                                                    .InputAttr(new { name = "User.UserName" })
+                                                    .ElementAttr("class", "required-validation")
+                                                    .Label("Tài khoản").LabelMode(EditorLabelMode.Floating)
+                                                    .MaxLength(50).ShowClearButton(true)
+                                                    .Value(Model.User.UserName)
+                                                    .ReadOnly(true)
+                                                    ) *@
+                                             @*    <input asp-for="User.UserName" class="form-control" required="" /> *@
+                                            </div>
+                                            @await Html.PartialAsync("AccountInformationPartialView", Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab2">
+                                        <div style="padding: 10px">
+                                            @await Html.PartialAsync("RolePartialView", Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab3">
+                                        <div style="padding: 10px">
+                                            @await Html.PartialAsync("PermissionPartialView", Model)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<script>
+    function onBackToUserListClicked() {
+        location.href = '@Url.Action("Index", "Users", new { area = "Admin" })';
+    }
+
+    function saveClicked() {
+        var permissionSeleted = $("#permission").dxTreeList("instance").getSelectedRowKeys();
+        var roleSeleted = $("#gridRolesContainer").dxDataGrid("instance").getSelectedRowKeys();
+
+        var formData = {
+            RoleIDs: roleSeleted,
+            PermissionIds: permissionSeleted,
+            User: {
+                UserName: $("#UserName").dxTextBox("instance").option("value"),
+                Email: $("#Email").dxTextBox("instance").option("value"),
+                PhoneNumber: $("#PhoneNumber").dxTextBox("instance").option("value"),
+                UserId: $("#UserId").dxTextBox("instance").option("value")
+            }
+        };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SubmitEdit", "Users", new { area = "Admin" })',
+            data: JSON.stringify(formData),
+            async: true,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: async function (response) {
+                notify("Cập nhật dữ liệu thành công", "success");
+            },
+            error: function (response) {
+                notify("Cập nhật dữ liệu thất bại", "fail");
+            }
+        });
+        //}
+    }
+
+</script>

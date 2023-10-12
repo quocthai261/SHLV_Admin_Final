@@ -1,0 +1,109 @@
+﻿<div class="modal fade" id="popup-create" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" style="background: #00000080;">
+    <div class="modal-dialog modal-md" style="max-height:90%; margin-top: 100px;">
+        <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+            <div class="modal-header">
+                <h1 class="h4 mb-3 form-title"><strong>Phiên bản</strong></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Mã ứng dụng").Value("mSFA").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Tên ứng dụng").Value("SFA - Mobile").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @* @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Hệ điều hành").Value("mSFA").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50)) *@
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("Os")
+                                .DataSource(d => d.WebApi().Area("Admin").Controller("Version").LoadAction("GetOsListApi"))
+                                .DisplayExpr("name")
+                                .ValueExpr("code")
+                                .Placeholder("Chọn")
+                                .SearchEnabled(true).Label("Hệ điều hành").LabelMode(EditorLabelMode.Floating)
+                                .ShowClearButton(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @* @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Môi trường").Value("SFA - Mobile").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50)) *@
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("Env")
+                                .DataSource(d => d.WebApi().Area("Admin").Controller("Version").LoadAction("GetEnvListApi"))
+                                .DisplayExpr("name")
+                                .ValueExpr("code")
+                                .Placeholder("Chọn")
+                                .SearchEnabled(true).Label("Môi trường").LabelMode(EditorLabelMode.Floating)
+                                .ShowClearButton(true)
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Link apple store").Value("https://install.appcenter.ms/orgs/fis.mobile/apps/lime-pro-uat-ios/distribution_groups/public").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().TextBox().ElementAttr("class", "required-validation")
+                                .Label("Phiên bản").Value("0.1.3").LabelMode(EditorLabelMode.Floating)
+                                .MaxLength(50))
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().CheckBox().Value(true).IconSize(18).ElementAttr("aria-label", "Custom size")
+                                .Text("Sử dụng")
+                                )
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-group">
+                            @(Html.DevExtreme().CheckBox().Value(true).IconSize(18).ElementAttr("aria-label", "Custom size")
+                                .Text("Cập nhật bắt buộc")
+                                )
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveCertiType" onclick="onButtonSaveCertiTypeClicked()" type="button" class="btn btn-purple-style">Lưu</button>
+                <button id="btnCloseCertiType" onclick="onButtonCloseCertiTypeClicked()" type="button" class="btn btn-purple-style">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function onButtonSaveCertiTypeClicked() {
+        var modal = document.getElementById("popup-create");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+
+        notify("Cập nhật dữ liệu thành công", "success");
+    }
+
+    function onButtonCloseCertiTypeClicked() {
+        var modal = document.getElementById("popup-create");
+        modal.classList.remove("show", "in");
+        modal.style.display = "none";
+    }
+
+</script>

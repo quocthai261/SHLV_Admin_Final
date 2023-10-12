@@ -1,0 +1,110 @@
+﻿@using AdminWeb.Dtos.ApiResponse;
+@using AdminWeb.Models
+@using AdminWeb.Areas.Category.Controllers
+
+<div class="container-fluid p-0">
+    <h1 class="h4 mb-3 form-title"><strong>Quản lý công việc và đồng bộ</strong></h1>
+    <div class="row">
+        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
+            <div class="card flex-fill w-100 form-control-ui">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"></h5>
+                    <button class="btn btn-purple-invert btn-filter" type="submit" onclick="onAddNewSyncJobsClicked()">Thêm mới <i class="bi bi-plus-circle-fill"></i></button>
+                </div>
+                <div class="card-body py-3">
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("gridSyncJobsList")
+                        .DataSource(d => d.WebApi()
+                        .Area("Admin")
+                        .Controller("SyncJobs")
+                        .LoadAction("GetSyncJobsList")
+                        .Key("JobId")
+                        )
+                        .ShowBorders(true)
+                        .Selection(s => s.Mode(SelectionMode.Single))
+                        .Export(e => e.Enabled(true).AllowExportSelectedData(false)).OnExporting("exportingGridSyncJobs")
+                        .Columns(columns =>
+                        {
+                            columns.Add().Caption("").Width(120).CellTemplate(@<text>
+                                <span class="glyphicon glyphicon-edit icon-grid" onclick="onEditSyncJobsClicked()"></span>
+                                <span class="glyphicon glyphicon-ok-circle icon-grid" onclick=""></span>
+                                <span class="glyphicon glyphicon-trash icon-grid" onclick="onDateleSyncJobsClicked()"></span>
+                                <span class="glyphicon glyphicon-play-circle icon-grid" onclick=""></span>
+                            </text>);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.JobId)).Caption("ID").Visible(false);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.ScheduleDescription)).Caption("Mô tả lịch trình");
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.Description)).Caption("Mô tả công việc");
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.Enable)).Caption("Enable").DataType(GridColumnDataType.Boolean);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.Valid)).Caption("Valid").DataType(GridColumnDataType.Boolean);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.JobIsRunning)).Caption("Công việc đang chạy").DataType(GridColumnDataType.Boolean);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.ForceRun)).Caption("Bắt buộc chạy").DataType(GridColumnDataType.Boolean);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.CreationDate)).Caption("Ngày tạo").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                            columns.Add().DataField(nameof(SyncJobsResponseModel.LastUpdatedDate)).Caption("Ngày cập nhật").DataType(GridColumnDataType.DateTime).Format("dd/MM/yyyy  HH:mm").Alignment(HorizontalAlignment.Center).Width(150);
+                        })
+                        .ColumnHidingEnabled(false)
+                        .AllowColumnResizing(true)
+                        .ColumnAutoWidth(true)
+                        .ColumnMinWidth(50)
+                        .ShowRowLines(true)
+                        .FilterRow(f => f.Visible(true))
+                        .HeaderFilter(f => f.Visible(false))
+                        .GroupPanel(p => p.Visible(false))
+                        .Grouping(g => g.AutoExpandAll(false))
+                        .RemoteOperations(false)
+                        .Paging(paging => paging.PageSize(10))
+                        .Pager(pager =>
+                        {
+                            pager.ShowPageSizeSelector(true);
+                            pager.AllowedPageSizes(new[] { 5, 10, 20 });
+                            pager.ShowInfo(true);
+                        })
+                        )
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("CreateOrUpdate")
+
+<script>
+    function onAddNewSyncJobsClicked() {
+
+        var modal = document.getElementById("popupSyncJobs");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onEditSyncJobsClicked() {
+
+        var modal = document.getElementById("popupSyncJobs");
+        modal.classList.add("show", "in");
+        modal.style.display = "block";
+    }
+
+    function onDateleSyncJobsClicked() {
+        var myDialog = confirmDialog("Bạn có muốn xóa dữ liệu?", "", "Có", "Không");
+        myDialog.show().done(function (dialogResult) {
+            if (dialogResult.buttonText === "Có") {
+                notify("Xóa dữ liệu thành công", "success");
+            }
+        });
+    }
+
+    function exportingGridSyncJobs(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('SyncJobs');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'SyncJobsList.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>
+
